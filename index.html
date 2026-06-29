@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cite Engine — catch Obsidian quotes that no longer match the source</title>
+<meta name="description" content="A free Obsidian plugin that flags quotes in your notes that silently went out of sync with their source. The link still resolves, so nothing warns you. Cite Engine does.">
+<link rel="canonical" href="https://flyingmiata-droid.github.io/cite-engine-site/">
+<meta property="og:title" content="Cite Engine — catch quotes that silently went stale">
+<meta property="og:description" content="Free Obsidian plugin. You edit a source note, a quote you pulled from it no longer matches, and nothing warns you. Cite Engine catches that.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://flyingmiata-droid.github.io/cite-engine-site/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cite Engine — catch quotes that silently went stale">
+<meta name="twitter:description" content="Free Obsidian plugin. You edit a source note, a quote no longer matches, and nothing warns you. Cite Engine catches that.">
+<meta name="twitter:image" content="https://flyingmiata-droid.github.io/cite-engine-site/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Crimson+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Cite Engine","applicationCategory":"Obsidian plugin","operatingSystem":"Obsidian (Windows, macOS, Linux)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free Obsidian plugin that flags quotes that no longer match their source after you edit a note."}
+</script>
+<style>
+  :root{
+    --bg:#0F172A; --panel:#161f33; --panel2:#1b2540; --line:#2a3550;
+    --ink:#F8FAFC; --muted:#9fb0cc; --accent:#22C55E; --accent2:#4ade80;
+    --good:#4ade80; --bad:#f0708a; --radius:14px; --max:900px;
+    --grid:#1c2740;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.65 "Atkinson Hyperlegible",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Crimson Pro",Georgia,serif;font-weight:700}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#06210f;font-weight:700;
+    padding:13px 24px;border-radius:10px;border:0;cursor:pointer;font-size:16px;
+    font-family:"Atkinson Hyperlegible",sans-serif;transition:background .2s ease,transform .2s ease}
+  .btn:hover{background:var(--accent2);text-decoration:none;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:700}
+  .btn.ghost:hover{border-color:var(--accent);background:rgba(34,197,94,.06)}
+  .muted{color:var(--muted)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent2);font-weight:700;font-family:"Atkinson Hyperlegible",sans-serif;
+    padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(34,197,94,.04)}
+
+  /* hero */
+  header.hero{position:relative;overflow:hidden;padding:96px 0 64px;text-align:center}
+  .gridbg{position:absolute;inset:0;z-index:0;height:640px;opacity:.6;
+    background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),linear-gradient(to bottom,var(--grid) 1px,transparent 1px);
+    background-size:64px 56px;
+    -webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,#000 60%,transparent 100%);
+    mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,#000 60%,transparent 100%)}
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{font-size:clamp(34px,6vw,60px);line-height:1.05;margin:20px auto 16px;letter-spacing:-.01em;max-width:14ch;
+    background:linear-gradient(180deg,#ffffff,rgba(248,250,252,.62));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero h1 .hl{background:linear-gradient(180deg,var(--accent2),#16a34a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{font-size:clamp(17px,2.3vw,20px);color:var(--muted);max-width:600px;margin:0 auto 30px}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .badge{margin-top:20px;font-size:13px;color:var(--muted)}
+  .chev{width:15px;height:15px;display:inline-block;vertical-align:-2px}
+
+  /* demo gif */
+  .demowrap{position:relative;z-index:1;max-width:760px;margin:44px auto 0;padding:0 22px}
+  .demowrap img{width:100%;border:1px solid var(--line);border-radius:var(--radius);display:block;
+    box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .demowrap figcaption{margin:12px 0 0;font-size:13px;color:var(--muted);text-align:center}
+
+  section{padding:54px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(25px,3.6vw,34px);letter-spacing:-.01em;margin:12px 0 8px}
+  .lede{color:var(--muted);max-width:640px;margin:0 0 26px;font-size:17px}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+  .demo{display:grid;grid-template-columns:1fr;gap:14px;max-width:760px}
+  .card .lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:700}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.7}
+  .q{color:var(--ink)} .ref{color:var(--accent2)}
+  .flag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;
+    padding:2px 8px;border-radius:6px;background:rgba(240,112,138,.14);color:var(--bad);border:1px solid rgba(240,112,138,.3)}
+  .ok{color:var(--good)} .no{color:var(--bad)}
+  .arrow{color:var(--muted);text-align:center;font-size:18px;margin:-2px 0}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .feat h3{margin:4px 0 6px;font-size:20px}
+  .feat p{margin:0;color:var(--muted);font-size:15px}
+  .num{width:32px;height:32px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent2);font-size:15px;font-family:"Atkinson Hyperlegible",sans-serif}
+
+  ul.clean{list-style:none;padding:0;margin:0}
+  ul.clean li{padding:9px 0 9px 28px;position:relative;color:var(--muted)}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  ul.clean li b{color:var(--ink);font-weight:700}
+  .mono.inline{background:#0b1120;padding:1px 6px;border-radius:5px;border:1px solid var(--line)}
+
+  .panelbox{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:18px;padding:32px 28px}
+  .priv{margin-top:18px;font-size:13.5px;color:var(--muted)}
+  .priv b{color:var(--ink)}
+
+  .faq h3{font-size:18px;margin:18px 0 4px}
+  .faq p{margin:0 0 4px;color:var(--muted);font-size:15px}
+
+  footer{padding:44px 0 64px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;text-align:center}
+  .small{font-size:12.5px}
+  @media(max-width:640px){.grid3{grid-template-columns:1fr}.hero{padding:70px 0 48px}}
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="gridbg" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow">Obsidian plugin &middot; free &middot; open source</span>
+    <h1>Your quote silently goes stale. <span class="hl">Nothing tells you.</span></h1>
+    <p class="sub">You paste a quote, then later edit the source note. The link still resolves, so Obsidian shows all good, but the words you quoted no longer match. Cite Engine is the check for exactly that.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://community.obsidian.md/plugins/cite-engine" target="_blank" rel="noopener">Install free
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+      <a class="btn ghost" href="#waitlist">See what's paid</a>
+    </div>
+    <div class="badge">Live in the Obsidian community plugin directory &middot; no account, no data leaves your vault</div>
+  </div>
+  <figure class="demowrap">
+    <img src="cite-engine-drift-demo.gif" alt="Cite Engine flagging a quote that no longer matches its source after the source note was edited">
+    <figcaption>Edit the source, the block link still resolves, and Cite Engine flags the quote that quietly stopped matching.</figcaption>
+  </figure>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <span class="eyebrow">The trap</span>
+    <h2>The link checks the pointer, not the words</h2>
+    <p class="lede">Block references resolve by id. Rename the note or reword the passage and the <i>link</i> still works. The quote you typed next to it is a frozen copy that never updates, and nothing flags the mismatch. Your link is green while your quote is wrong.</p>
+    <div class="demo">
+      <div class="card">
+        <div class="lbl">In your draft</div>
+        <div class="mono"><span class="q">"What is the area within which the subject&mdash;a person or group of persons&mdash;is or should be left to do or be what he is able to do or be, without interference by other persons?"</span> <span class="ref">[[berlin-1969-four-essays#^blk-2k9|p. 121]]</span></div>
+      </div>
+      <div class="arrow" aria-hidden="true">&darr; &nbsp; you tighten the source wording weeks later</div>
+      <div class="card">
+        <div class="lbl">Status</div>
+        <div class="mono">Link resolves <span class="ok">&#10003; all good</span> &nbsp;&middot;&nbsp; Quote vs source <span class="no">&#10007; no longer matches</span> &nbsp;<span class="flag">DRIFT</span></div>
+        <p class="muted" style="margin:12px 0 0;font-size:14px">Native Obsidian shows the first line only. Cite Engine catches the second.</p>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:14px">Quote: Isaiah Berlin, <i>Four Essays on Liberty</i>, p. 121 (shown verbatim, since fidelity is the whole point).</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <span class="eyebrow">How it works</span>
+    <h2>Three commands. No model touches the citation.</h2>
+    <p class="lede">Deterministic on the part that has to be true. Nothing is summarized, nothing is invented, and your prose is never rewritten. It just tells you which quotes to look at.</p>
+    <div class="grid3">
+      <div class="card feat"><div class="num">1</div><h3>Stamp source</h3><p>Gives a clipped note a stable citekey and a block id on every passage. Idempotent.</p></div>
+      <div class="card feat"><div class="num">2</div><h3>Cite a passage</h3><p>Fuzzy-pick a real passage and insert a live block-ref citation. There is no free-text path, so you <b>cannot cite something that doesn't exist</b>.</p></div>
+      <div class="card feat"><div class="num">3</div><h3>Integrity check</h3><p>Scans the note and flags any citation that no longer resolves, and any quote that has drifted from its source. Drops them in a review list.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <span class="eyebrow">Get it</span>
+    <h2>Free, client-side, yours</h2>
+    <p class="lede">The whole citation and drift core runs locally. No backend, no account, no data leaves your vault. Works alongside Zotero and the Web Clipper.</p>
+    <ul class="clean">
+      <li><b>Community Plugins:</b> Settings &rarr; Community plugins &rarr; Browse &rarr; search "Cite Engine" &rarr; Install.</li>
+      <li><b>Manual / beta:</b> via the GitHub release, or BRAT with <span class="mono inline">Flyingmiata-droid/cite-engine</span>.</li>
+    </ul>
+    <div class="cta-row" style="justify-content:flex-start;margin-top:24px">
+      <a class="btn" href="https://community.obsidian.md/plugins/cite-engine" target="_blank" rel="noopener">Open in the directory</a>
+      <a class="btn ghost" href="https://github.com/Flyingmiata-droid/cite-engine" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section id="waitlist">
+  <div class="wrap">
+    <div class="panelbox">
+      <span class="eyebrow">Coming next &middot; paid</span>
+      <h2>Copilot writes your draft. Cite Engine makes its citations unfakeable.</h2>
+      <p class="lede" style="margin-bottom:6px">Bring your own AI. The paid layer takes any draft you already have, including one written by Copilot or ChatGPT, and checks every citation against your own sources. Anything that doesn't resolve to a real verbatim passage in your vault gets flagged as unsupported, never passed off as real. You get an exportable integrity report you can stand behind before you submit.</p>
+      <p class="lede" style="margin-bottom:18px">We are the validator, not a second writer. Keep the tools you already pay for, and we guarantee the sourcing.</p>
+      <a class="btn" id="wlbtn" href="https://tally.so/r/RG22oP" target="_blank" rel="noopener">Join the waitlist
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+      <p class="muted small" style="margin-top:8px">Two questions: would you pay to certify your citations before you submit, and would you pay us to check an AI's output against your own sources.</p>
+      <div class="priv"><b>Privacy is the deal, not a footnote.</b> Opt-in only, never required for the free core. Transient processing, no training on your notes, explicit retention and deletion. A bring-your-own-key path is planned for the strictest setups.</div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <div class="wrap">
+    <span class="eyebrow">Related questions</span>
+    <h2>Quotes, citations, and Obsidian</h2>
+    <h3>Do block references break in Obsidian when you edit a note?</h3>
+    <p>Rarely. The block id is stable, so the link keeps resolving even after a rename. The failure people actually hit is the opposite: the link works but the quoted words changed. <a href="obsidian-quotes-out-of-sync-reddit.html">More on quotes going out of sync &rarr;</a></p>
+    <h3>What's the best Obsidian plugin for citations?</h3>
+    <p>Zotero plus an integration plugin for the bibliography, and a quote-integrity tool like Cite Engine for catching stale quotes. They solve different halves. <a href="best-obsidian-plugin-for-citations-reddit.html">The full rundown &rarr;</a> &middot; <a href="zotero-obsidian-workflow-reddit.html">Zotero + Obsidian workflow &rarr;</a></p>
+    <h3>Does Cite Engine replace Zotero?</h3>
+    <p>No. Zotero manages your references. Cite Engine checks that a quote you already pasted still matches its source after edits. Use both.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Cite Engine catches quotes in your Obsidian notes that no longer match their source.<br>
+    Built by an Obsidian user who hit this pain. <a href="https://github.com/Flyingmiata-droid/cite-engine" target="_blank" rel="noopener">GitHub</a> &middot; <a href="https://community.obsidian.md/plugins/cite-engine" target="_blank" rel="noopener">Directory</a></p>
+    <p class="small">Not affiliated with Obsidian.</p>
+  </div>
+</footer>
+
+<script>
+  // Carry ?src=<channel> into the Tally waitlist link so channel attribution survives the handoff.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    var src = p.get('src') || 'direct';
+    var btn = document.getElementById('wlbtn');
+    if (btn){ var u = new URL(btn.href); u.searchParams.set('src', src); btn.href = u.toString(); }
+  })();
+</script>
+</body>
+</html>

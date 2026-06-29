@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Best Obsidian Plugin for Citations: What Reddit Recommends</title>
+  <meta name="description" content="The Obsidian citation plugins people actually recommend on Reddit, with honest pros and cons, plus the one that catches quotes that silently go stale.">
+  <link rel="canonical" href="https://flyingmiata-droid.github.io/cite-engine-site/best-obsidian-plugin-for-citations-reddit.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Best Obsidian Plugin for Citations: What Reddit Recommends">
+  <meta property="og:description" content="Honest picks for managing citations in Obsidian, aggregated from common community sentiment.">
+  <meta property="og:type" content="article">
+  <style>body{max-width:720px;margin:2rem auto;padding:0 1rem;font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a}h1{font-size:1.7rem}h2{margin-top:2rem}code{background:#f4f4f4;padding:1px 4px;border-radius:3px}em{color:#666}</style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"What's the Best Obsidian Plugin for Citations? (Reddit's Honest Take)","datePublished":"2026-06-29","author":{"@type":"Person","name":"Nick Kaufman"}}
+  </script>
+</head>
+<body>
+<article>
+  <h1>What's the Best Obsidian Plugin for Citations? (Reddit's Honest Take)</h1>
+  <p><em>Updated June 29, 2026 &middot; by Nick Kaufman</em></p>
+  <p><strong>Most people pair Zotero with an Obsidian integration plugin for bibliographies, and add a separate tool only for the thing Zotero does not check: whether a quote still matches its source.</strong> There is no single "citations" plugin that does everything, so the common setup is a reference manager plus one or two small plugins.</p>
+
+  <h2>TL;DR — what people actually recommend</h2>
+  <ul>
+    <li>Use <strong>Zotero</strong> as the source of truth and pull references in with an integration plugin. This is the default answer for academic writing.</li>
+    <li>For inserting and formatting references inside notes, the <strong>Citations</strong> plugin and <strong>Pandoc Reference List</strong> come up most.</li>
+    <li>For capturing sources off the web, the official <strong>Web Clipper</strong> is the usual pick.</li>
+    <li>None of those tell you when a quote you already pasted no longer matches the source after you edit it. That is a separate, real gap people hit late in a project.</li>
+  </ul>
+
+  <h2>Zotero + an integration plugin</h2>
+  <p>The standard recommendation for bibliography management.</p>
+  <p><strong>Pros:</strong> mature, handles thousands of references, citation styles, group libraries.<br>
+  <strong>Cons:</strong> setup is fiddly, and it manages references, not the verbatim quotes you paste into your own notes.</p>
+
+  <h2>Citations / Pandoc Reference List</h2>
+  <p>Good for formatting and inserting references inside Obsidian.</p>
+  <p><strong>Pros:</strong> clean reference lists, works with your Zotero/BibTeX library.<br>
+  <strong>Cons:</strong> focused on the bibliography, not on whether a quoted passage still says what the source said.</p>
+
+  <h2>Cite Engine (for quote accuracy, not bibliography)</h2>
+  <p>Cite Engine is a free, open-source community plugin that solves one narrow problem the others leave open: when you paste a quote, then later edit or reword the source note, the link still resolves so Obsidian shows everything as fine, but the quoted words no longer match. Nothing warns you. Cite Engine snapshots each quote at the moment you cite it and an integrity check flags any quote that has since drifted from its source.</p>
+  <p><strong>Pros:</strong> deterministic, no AI touches the citation so it cannot invent one, never rewrites your prose, free.<br>
+  <strong>Cons:</strong> narrow on purpose. It is not a bibliography manager and does not replace Zotero. New and small. You still manage references elsewhere.</p>
+
+  <h2>The verdict</h2>
+  <p><strong>Use Zotero plus an integration plugin for references, and add Cite Engine if you quote sources verbatim and want to know the moment a quote stops matching.</strong> The two solve different halves of the problem: one manages what you cite, the other checks that what you quoted is still true.</p>
+
+  <h2>Related questions</h2>
+  <h3>Do block references break in Obsidian when you edit a note? (reddit)</h3>
+  <p>The link usually keeps resolving because the block id is stable, which is the trap: the reference looks fine while the quoted text underneath it has changed. That mismatch is exactly what a quote-integrity check is for.</p>
+  <h3>How do you keep quotes accurate across many sources in Obsidian? (reddit)</h3>
+  <p>Manually, most people click back to the page and reread the source. That works for a few sources and breaks down across a large literature review, which is where an automated integrity check earns its place.</p>
+<p data-seealso style="margin-top:2rem;border-top:1px solid #eee;padding-top:1rem;font-size:14px"><strong>More:</strong> <a href="obsidian-quotes-out-of-sync-reddit.html">Quotes going out of sync</a> &middot; <a href="zotero-obsidian-workflow-reddit.html">Zotero + Obsidian workflow</a></p>
+</article>
+</body>
+</html>

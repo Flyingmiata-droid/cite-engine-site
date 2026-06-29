@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Obsidian Quotes Out of Sync With the Source? Reddit Fixes</title>
+  <meta name="description" content="Your Obsidian quote still links fine but no longer matches the source after an edit. Here is why it happens and how people catch it.">
+  <link rel="canonical" href="https://flyingmiata-droid.github.io/cite-engine-site/obsidian-quotes-out-of-sync-reddit.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Obsidian Quotes Out of Sync With the Source? Reddit Fixes">
+  <meta property="og:description" content="Why a resolving block-ref can still hold a stale quote, and how to catch it.">
+  <meta property="og:type" content="article">
+  <style>body{max-width:720px;margin:2rem auto;padding:0 1rem;font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a}h1{font-size:1.7rem}h2{margin-top:2rem}code{background:#f4f4f4;padding:1px 4px;border-radius:3px}em{color:#666}</style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Obsidian Quotes Out of Sync With the Source? Here's What Reddit Says","datePublished":"2026-06-29","author":{"@type":"Person","name":"Nick Kaufman"}}
+  </script>
+</head>
+<body>
+<article>
+  <h1>Obsidian Quotes Out of Sync With the Source? Here's What Reddit Says</h1>
+  <p><em>Updated June 29, 2026 &middot; by Nick Kaufman</em></p>
+  <p><strong>It happens because the block-reference link stays valid while the quoted text underneath it changes, so Obsidian shows no error even though the quote is now wrong.</strong> The link points at a block id, not at the exact words, so editing the source silently leaves a stale quote in your notes.</p>
+
+  <h2>TL;DR — what people actually say</h2>
+  <ul>
+    <li>The link keeps working because the block id is stable, which is exactly why nothing warns you.</li>
+    <li>Renaming a note does not cause this. Editing the wording of a quoted passage does.</li>
+    <li>The common manual fix is to click back to the source and reread it before trusting any quote in a draft.</li>
+    <li>A collapsible callout copy of the source helps, but you still have to notice the mismatch yourself.</li>
+  </ul>
+
+  <h2>The manual approach</h2>
+  <p>Click each citation back to its source block and reread it. Honest and reliable for a handful of sources.</p>
+  <p><strong>Pros:</strong> no tooling, full control.<br>
+  <strong>Cons:</strong> does not scale. Across a large literature review you cannot reread every quote, and the one that drifted is invisible until a reviewer finds it.</p>
+
+  <h2>Cite Engine (automates the check)</h2>
+  <p>Cite Engine is a free, open-source Obsidian plugin built for exactly this. It snapshots each quote at the moment you cite it, and an integrity check re-reads your sources and flags any quote whose words no longer match. No AI touches the citation, so it cannot invent one, and it never rewrites your prose. It just hands you the list of quotes to look at.</p>
+  <p><strong>Pros:</strong> catches the silent failure native block-refs miss, deterministic, free, works alongside Zotero and the Web Clipper.<br>
+  <strong>Cons:</strong> narrow. It checks quote integrity, it is not a full citation manager. New and small.</p>
+
+  <h2>The verdict</h2>
+  <p><strong>If you quote sources verbatim and edit your notes over months, assume some quotes have drifted and you cannot see it.</strong> Reread by hand for a few sources, or run an integrity check that flags the drifted ones automatically once the count gets large.</p>
+
+  <h2>Related questions</h2>
+  <h3>Do block references break in Obsidian? (reddit)</h3>
+  <p>Rarely. The block id is stable, so the link keeps resolving even after a rename. The failure people actually hit is the opposite: the link works but the quoted words changed.</p>
+  <h3>Best obsidian plugin for citations? (reddit)</h3>
+  <p>Zotero plus an integration plugin for the bibliography, and a quote-integrity tool like Cite Engine for catching stale quotes. They cover different halves of the problem.</p>
+<p data-seealso style="margin-top:2rem;border-top:1px solid #eee;padding-top:1rem;font-size:14px"><strong>More:</strong> <a href="best-obsidian-plugin-for-citations-reddit.html">Best citation plugins</a> &middot; <a href="zotero-obsidian-workflow-reddit.html">Zotero + Obsidian workflow</a></p>
+</article>
+</body>
+</html>

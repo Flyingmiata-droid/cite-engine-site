@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zotero + Obsidian Workflow: What Reddit Actually Does</title>
+  <meta name="description" content="How people actually wire Zotero into Obsidian for research notes, the common plugin stack, and the one gap that setup leaves open: stale quotes.">
+  <link rel="canonical" href="https://flyingmiata-droid.github.io/cite-engine-site/zotero-obsidian-workflow-reddit.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Zotero + Obsidian Workflow: What Reddit Actually Does">
+  <meta property="og:description" content="The common Zotero-to-Obsidian research stack, honest pros and cons, and the stale-quote gap it leaves.">
+  <meta property="og:type" content="article">
+  <style>body{max-width:720px;margin:2rem auto;padding:0 1rem;font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a}h1{font-size:1.7rem}h2{margin-top:2rem}code{background:#f4f4f4;padding:1px 4px;border-radius:3px}em{color:#666}</style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Article","headline":"Zotero + Obsidian Workflow: What Reddit Actually Does","datePublished":"2026-06-29","author":{"@type":"Person","name":"Nick Kaufman"}}
+  </script>
+</head>
+<body>
+<article>
+  <h1>Zotero + Obsidian Workflow: What Reddit Actually Does</h1>
+  <p><em>Updated June 29, 2026 &middot; by Nick Kaufman</em></p>
+  <p><strong>The common setup keeps references in Zotero, pulls them into Obsidian with an integration plugin, and writes the actual notes in Obsidian.</strong> Zotero stays the source of truth for citations; Obsidian is where you think, link, and quote.</p>
+
+  <h2>TL;DR — the usual stack</h2>
+  <ul>
+    <li><strong>Zotero</strong> for the library, PDFs, and citation styles.</li>
+    <li>A <strong>Zotero integration plugin</strong> (and often a BibTeX export) to pull references and annotations into Obsidian.</li>
+    <li><strong>Obsidian</strong> for literature notes, concept notes, and backlinks between them.</li>
+    <li>What nothing in this stack checks: whether a quote you pasted still matches the source after you edit your notes.</li>
+  </ul>
+
+  <h2>How people wire it up</h2>
+  <p>Keep one literature note per source with the citekey in frontmatter and your highlights underneath. Link concept notes back to those. Most people pull annotations from Zotero automatically, then write in Obsidian.</p>
+  <p><strong>Pros:</strong> clean separation, strong linking, your bibliography stays portable.<br>
+  <strong>Cons:</strong> the import is fiddly to set up, and once a quote lives in your own note, Zotero no longer guards it.</p>
+
+  <h2>The gap: quotes drift, silently</h2>
+  <p>When you reword a source note or tighten a passage, any quote you pulled from it can stop matching while the block link still resolves. Obsidian shows no error. A free plugin called <strong>Cite Engine</strong> closes this specific gap: it snapshots each quote at cite time and flags any that no longer match the source. It is not a Zotero replacement, it is the accuracy check that sits on top of this workflow.</p>
+  <p><strong>Pros:</strong> deterministic, free, no AI in the citation, works alongside Zotero and the Web Clipper.<br>
+  <strong>Cons:</strong> narrow by design, only quote integrity. You still manage references in Zotero.</p>
+
+  <h2>The verdict</h2>
+  <p><strong>Zotero for references, Obsidian for thinking, and a quote-integrity check so the quotes you paste stay true to the source.</strong> The first two are the standard stack; the third is the part most people only notice they needed after a quote turns out wrong.</p>
+
+  <h2>Related questions</h2>
+  <h3>Obsidian quotes out of sync with source? (reddit)</h3>
+  <p>The block link keeps resolving after you edit the source, so the quote can be stale with no warning. That is exactly the gap a quote-integrity check fills.</p>
+  <h3>Best obsidian plugin for citations? (reddit)</h3>
+  <p>Zotero plus an integration plugin for the bibliography, and Cite Engine for catching stale quotes. Different halves of the same job.</p>
+<p data-seealso style="margin-top:2rem;border-top:1px solid #eee;padding-top:1rem;font-size:14px"><strong>More:</strong> <a href="best-obsidian-plugin-for-citations-reddit.html">Best citation plugins</a> &middot; <a href="obsidian-quotes-out-of-sync-reddit.html">Quotes going out of sync</a></p>
+</article>
+</body>
+</html>
