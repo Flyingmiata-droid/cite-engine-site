@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote Checker — verify a quote still matches its source (free)</title>
+<meta name="description" content="Free tool. Paste a quote and the source text, and find out instantly if the quote still matches word for word, with the exact difference highlighted. No login, runs in your browser.">
+<link rel="canonical" href="https://citeengine.app/quote-checker.html">
+<meta property="og:title" content="Quote Checker — does your quote still match the source?">
+<meta property="og:description" content="Paste a quote and its source. See instantly if it matches word for word, or exactly where it drifted. Free, no login, runs in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://citeengine.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quote Checker — does your quote still match the source?">
+<meta name="twitter:description" content="Paste a quote and its source. See instantly if it matches word for word, or where it drifted. Free, runs in your browser.">
+<meta name="twitter:image" content="https://citeengine.app/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Crimson+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Quote Checker","applicationCategory":"Utility","operatingSystem":"Any (browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free browser tool that checks whether a quote still matches its source text word for word, highlighting any difference."}
+</script>
+<style>
+  :root{
+    --bg:#0F172A; --panel:#161f33; --panel2:#1b2540; --line:#2a3550;
+    --ink:#F8FAFC; --muted:#9fb0cc; --accent:#22C55E; --accent2:#4ade80;
+    --good:#4ade80; --bad:#f0708a; --radius:14px; --max:900px; --grid:#1c2740;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.65 "Atkinson Hyperlegible",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Crimson Pro",Georgia,serif;font-weight:700}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,.btn:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#06210f;font-weight:700;
+    padding:13px 24px;border-radius:10px;border:0;cursor:pointer;font-size:16px;
+    font-family:"Atkinson Hyperlegible",sans-serif;transition:background .2s ease,transform .2s ease}
+  .btn:hover{background:var(--accent2);text-decoration:none;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:700}
+  .btn.ghost:hover{border-color:var(--accent);background:rgba(34,197,94,.06)}
+  .muted{color:var(--muted)}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--accent2);font-weight:700;font-family:"Atkinson Hyperlegible",sans-serif;
+    padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(34,197,94,.04)}
+
+  header.hero{position:relative;overflow:hidden;padding:80px 0 36px;text-align:center}
+  .gridbg{position:absolute;inset:0;z-index:0;height:520px;opacity:.6;
+    background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),linear-gradient(to bottom,var(--grid) 1px,transparent 1px);
+    background-size:64px 56px;
+    -webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,#000 60%,transparent 100%);
+    mask-image:radial-gradient(ellipse 70% 50% at 50% 0%,#000 60%,transparent 100%)}
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{font-size:clamp(32px,5.4vw,52px);line-height:1.06;margin:18px auto 14px;letter-spacing:-.01em;max-width:16ch;
+    background:linear-gradient(180deg,#ffffff,rgba(248,250,252,.62));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero h1 .hl{background:linear-gradient(180deg,var(--accent2),#16a34a);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{font-size:clamp(16px,2.2vw,19px);color:var(--muted);max-width:600px;margin:0 auto 6px}
+
+  section{padding:30px 0}
+  .toolwrap{max-width:760px;margin:0 auto}
+  .field{margin:0 0 16px}
+  .field label{display:block;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 7px}
+  textarea{width:100%;min-height:96px;resize:vertical;background:#0b1120;color:var(--ink);border:1px solid var(--line);
+    border-radius:12px;padding:13px 15px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:1.6}
+  textarea::placeholder{color:#5b6c8a}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:4px 0 0}
+  .opt{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+  .opt input{width:16px;height:16px;accent-color:var(--accent)}
+
+  .result{margin:22px 0 0;border-radius:var(--radius);border:1px solid var(--line);background:var(--panel);padding:0;overflow:hidden;display:none}
+  .result.show{display:block}
+  .rhead{padding:16px 20px;font-weight:700;font-size:17px;display:flex;align-items:center;gap:10px;font-family:"Atkinson Hyperlegible",sans-serif}
+  .rhead.match{background:rgba(74,222,128,.10);color:var(--good);border-bottom:1px solid var(--line)}
+  .rhead.drift{background:rgba(240,112,138,.10);color:var(--bad);border-bottom:1px solid var(--line)}
+  .rbody{padding:18px 20px}
+  .lbl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 7px;font-weight:700}
+  .line{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:1.85;margin:0 0 16px;
+    background:#0b1120;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .del{color:var(--bad);text-decoration:line-through;text-decoration-thickness:2px}
+  .add{color:var(--good);font-weight:700;border-bottom:2px solid rgba(74,222,128,.5)}
+  .note{font-size:14px;color:var(--muted);margin:6px 0 0}
+  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;padding:2px 8px;border-radius:6px;
+    background:rgba(240,112,138,.14);color:var(--bad);border:1px solid rgba(240,112,138,.3)}
+
+  .tieback{margin-top:18px;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:22px 22px}
+  .tieback h3{margin:0 0 6px;font-size:20px}
+  .tieback p{margin:0 0 14px;color:var(--muted);font-size:15px}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap}
+  .chev{width:15px;height:15px;display:inline-block;vertical-align:-2px}
+
+  .how{max-width:760px;margin:30px auto 0;border-top:1px solid var(--line);padding-top:26px}
+  .how h2{font-size:clamp(22px,3vw,28px);margin:0 0 8px}
+  .how p{color:var(--muted);font-size:15.5px;margin:0 0 10px}
+  .faq{max-width:760px;margin:8px auto 0}
+  .faq h3{font-size:17px;margin:18px 0 4px}
+  .faq p{margin:0;color:var(--muted);font-size:15px}
+
+  footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;text-align:center;margin-top:34px}
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="gridbg" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eyebrow">Free tool &middot; runs in your browser</span>
+    <h1>Does your quote still <span class="hl">match the source?</span></h1>
+    <p class="sub">Paste a quote and the source text it came from. This checks, word for word, whether they still match, and shows you exactly where they drifted. Nothing is uploaded. It all runs on your machine.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap toolwrap">
+    <div class="field">
+      <label for="quote">Your quote</label>
+      <textarea id="quote" placeholder="Paste the quote exactly as it appears in your notes or draft..."></textarea>
+    </div>
+    <div class="field">
+      <label for="source">The source text</label>
+      <textarea id="source" placeholder="Paste the passage from the source it should match (you can paste a whole paragraph or page)..."></textarea>
+    </div>
+    <div class="row">
+      <button class="btn" id="check">Check the quote</button>
+      <button class="btn ghost" id="example">Try an example</button>
+      <label class="opt"><input type="checkbox" id="loose" checked> Ignore spacing, smart quotes, and dashes</label>
+    </div>
+
+    <div class="result" id="result" aria-live="polite">
+      <div class="rhead" id="rhead"></div>
+      <div class="rbody" id="rbody"></div>
+    </div>
+
+    <div class="tieback">
+      <h3>This is the check you cannot do by eye across a whole vault</h3>
+      <p>You just ran it on one quote. Cite Engine runs it automatically on every quote in your Obsidian notes, the moment a source changes. The link stays green, but it flags the quote that quietly stopped matching.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://community.obsidian.md/plugins/cite-engine">Install the free plugin</a>
+        <a class="btn ghost" href="https://tally.so/r/RG22oP">Join the waitlist <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></a>
+        <a class="btn ghost" href="https://citeengine.app/">What is Cite Engine?</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="how">
+  <div class="wrap">
+    <h2>How this works</h2>
+    <p>It compares your quote against the source as plain text. If your quote appears in the source word for word, it matches. If it does not, the tool finds the closest passage in the source and highlights what changed: <span class="del">struck red</span> for the words in your quote that no longer appear, <span class="add">green</span> for the words the source says now. No AI, nothing is invented, your text never leaves the page.</p>
+  </div>
+</div>
+
+<div class="faq">
+  <div class="wrap">
+    <h3>Why would a quote stop matching its source?</h3>
+    <p>Because you edited the source after quoting it. You tightened a sentence, fixed a typo, reworded a passage. The quote you pasted earlier is a frozen copy that never updates. <a href="https://citeengine.app/obsidian-quotes-out-of-sync-reddit.html">More on quotes going out of sync &rarr;</a></p>
+    <h3>What is the best Obsidian plugin for citations?</h3>
+    <p>Use a reference manager like Zotero for the bibliography, and a quote-integrity tool like Cite Engine for catching stale quotes. <a href="https://citeengine.app/best-obsidian-plugin-for-citations-reddit.html">The full rundown &rarr;</a> &middot; <a href="https://citeengine.app/zotero-obsidian-workflow-reddit.html">Zotero + Obsidian workflow &rarr;</a></p>
+    <h3>Does this upload my text anywhere?</h3>
+    <p>No. The check runs entirely in your browser. Nothing is sent to a server, stored, or logged.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    Quote Checker is a free tool by <a href="https://citeengine.app/">Cite Engine</a>, which catches quotes in your Obsidian notes that no longer match their source.<br>
+    <a href="https://github.com/Flyingmiata-droid/cite-engine">GitHub</a> &middot; <a href="https://community.obsidian.md/plugins/cite-engine">Directory</a> &middot; Not affiliated with Obsidian.
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function canon(t,loose){
+    t=t.replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
+    if(loose){ t=t.replace(/[–—]/g,'-'); }
+    return t.replace(/\s+/g,' ').trim();
+  }
+  function tokens(t){ return t.trim().split(/\s+/).filter(Boolean); }
+  function nw(w,loose){
+    w=w.replace(/[‘’]/g,"'").replace(/[“”]/g,'"');
+    if(loose){ w=w.replace(/[–—]/g,'-'); }
+    return w.toLowerCase();
+  }
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // LCS over two word arrays (compared via normalized forms). Returns ops list.
+  function lcsDiff(a,b,loose){
+    var na=a.map(function(w){return nw(w,loose);});
+    var nb=b.map(function(w){return nw(w,loose);});
+    var n=a.length,m=b.length,i,j;
+    var dp=[]; for(i=0;i<=n;i++){ dp.push(new Array(m+1).fill(0)); }
+    for(i=n-1;i>=0;i--){ for(j=m-1;j>=0;j--){
+      dp[i][j]= na[i]===nb[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j],dp[i][j+1]);
+    }}
+    var ops=[]; i=0;j=0;
+    while(i<n&&j<m){
+      if(na[i]===nb[j]){ ops.push({t:'same',a:a[i],b:b[j]}); i++;j++; }
+      else if(dp[i+1][j]>=dp[i][j+1]){ ops.push({t:'del',a:a[i]}); i++; }
+      else { ops.push({t:'add',b:b[j]}); j++; }
+    }
+    while(i<n){ ops.push({t:'del',a:a[i]}); i++; }
+    while(j<m){ ops.push({t:'add',b:b[j]}); j++; }
+    return {ops:ops,lcs:dp[0][0]};
+  }
+
+  // pick the source window best aligned to the quote
+  function bestWindow(qWords,sWords,loose){
+    var qlen=qWords.length, slen=sWords.length;
+    if(slen<=qlen+2){ return {start:0,end:slen}; }
+    var best=null;
+    var lens=[qlen, Math.max(1,qlen-2), qlen+2, qlen+4];
+    for(var li=0; li<lens.length; li++){
+      var L=lens[li]; if(L>slen) L=slen;
+      for(var s=0;s+L<=slen;s++){
+        var span=sWords.slice(s,s+L);
+        var r=lcsDiff(qWords,span,loose);
+        var score=r.lcs;
+        if(!best||score>best.score){ best={score:score,start:s,end:s+L}; }
+      }
+    }
+    return best?{start:best.start,end:best.end}:{start:0,end:slen};
+  }
+
+  function renderQuote(ops){
+    var out=''; for(var k=0;k<ops.length;k++){ var o=ops[k];
+      if(o.t==='same') out+=esc(o.a)+' ';
+      else if(o.t==='del') out+='<span class="del">'+esc(o.a)+'</span> ';
+    } return out.trim();
+  }
+  function renderSource(ops){
+    var out=''; for(var k=0;k<ops.length;k++){ var o=ops[k];
+      if(o.t==='same') out+=esc(o.b)+' ';
+      else if(o.t==='add') out+='<span class="add">'+esc(o.b)+'</span> ';
+    } return out.trim();
+  }
+
+  function run(){
+    var quote=$('quote').value||'', source=$('source').value||'';
+    var loose=$('loose').checked;
+    var res=$('result'), rh=$('rhead'), rb=$('rbody');
+    if(!quote.trim()||!source.trim()){
+      res.className='result show'; rh.className='rhead drift';
+      rh.innerHTML='Paste both a quote and the source text';
+      rb.innerHTML='<p class="note">Drop your quote in the first box and the source passage in the second, then check.</p>';
+      return;
+    }
+    if(canon(source,loose).indexOf(canon(quote,loose))!==-1){
+      res.className='result show'; rh.className='rhead match';
+      rh.innerHTML='&#10003;&nbsp; Match. This quote appears in the source word for word.';
+      rb.innerHTML='<p class="note">Nothing to fix. If you edit the source later, this is exactly the kind of check Cite Engine reruns for you automatically.</p>';
+      return;
+    }
+    var qW=tokens(quote), sW=tokens(source);
+    var win=bestWindow(qW,sW,loose);
+    var span=sW.slice(win.start,win.end);
+    var d=lcsDiff(qW,span,loose);
+    res.className='result show'; rh.className='rhead drift';
+    rh.innerHTML='<span class="pill">DRIFT</span> This quote no longer matches the source.';
+    var pre = win.start>0 ? '&hellip; ' : '';
+    var post = win.end<sW.length ? ' &hellip;' : '';
+    rb.innerHTML=
+      '<p class="lbl">Your quote</p><div class="line">'+renderQuote(d.ops)+'</div>'+
+      '<p class="lbl">The source now reads</p><div class="line">'+pre+renderSource(d.ops)+post+'</div>'+
+      '<p class="note">Red is in your quote but gone from the source. Green is what the source says now. Inside Obsidian, the block link to this passage still resolves, so nothing else would have warned you.</p>';
+  }
+
+  function loadExample(){
+    $('quote').value='What is the area within which the subject is or should be left to do what he wants, without interference by other persons?';
+    $('source').value='What is the area within which the subject, a person or group of persons, is or should be left to do or be what he is able to do or be, without interference by other persons?';
+    $('loose').checked=true;
+    run();
+    $('result').scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  $('check').addEventListener('click',run);
+  $('example').addEventListener('click',loadExample);
+})();
+</script>
+</body>
+</html>
